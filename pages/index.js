@@ -4,7 +4,7 @@ import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export default function Home({ data }) {
   return (
     <>
       <Head>
@@ -23,21 +23,13 @@ export default function Home() {
       </header>
 
       <main className={styles.main}>
-        <a href="">
-          <img></img>
-          <h2>events in london</h2>
-          <p>lorem ipsum dolor sit amet</p>
-        </a>
-        <a href="">
-          <img></img>
-          <h2>events in paris</h2>
-          <p>lorem ipsum dolor sit amet</p>
-        </a>
-        <a href="">
-          <img></img>
-          <h2>events in germany</h2>
-          <p>lorem ipsum dolor sit amet</p>
-        </a>
+        {data.map((e) => (
+          <a key={e.id} href={`/events/${e.id}`}>
+            <img width={700} height={"100%"} src={e.image}></img>
+            <h2>{e.title}</h2>
+            <p>{e.description}</p>
+          </a>
+        ))}
       </main>
 
       <footer>
@@ -45,4 +37,14 @@ export default function Home() {
       </footer>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const { events_categories } = await import("/data/data.json");
+  console.log(events_categories);
+  return {
+    props: {
+      data: events_categories,
+    },
+  };
 }
